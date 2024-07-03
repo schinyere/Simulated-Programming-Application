@@ -412,32 +412,7 @@ with SingleTickerProviderStateMixin {
                           return Column(
                             children: [
                               Text('Write a program to check if a number is even or odd.'),
-                              Wrap(
-                                spacing: 8,
-                                runSpacing: 4,
-                                children: [
-                                  Draggable<String>(
-                                    data: 'if (num % 2 == 0)',
-                                    child: Text('if (num % 2 == 0)'),
-                                    feedback: Text('if (num % 2 == 0)'),
-                                  ),
-                                  Draggable<String>(
-                                    data: 'print("Even")',
-                                    child: Text('print("Even")'),
-                                    feedback: Text('print("Even")'),
-                                  ),
-                                  Draggable<String>(
-                                    data: 'else',
-                                    child: Text('else'),
-                                    feedback: Text('else'),
-                                  ),
-                                  Draggable<String>(
-                                    data: 'print("Odd")',
-                                    child: Text('print("Odd")'),
-                                    feedback: Text('print("Odd")'),
-                                  ),
-                                ],
-                              ),
+                              
                               _correctAnswers[0]
                                   ? Text('Correct!', style: TextStyle(color: Colors.green))
                                   : Text(''),
