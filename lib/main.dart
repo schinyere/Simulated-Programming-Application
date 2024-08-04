@@ -160,7 +160,7 @@ with SingleTickerProviderStateMixin {
               (
                 opacity: _animation,
                 child: const Text(
-                  "SP",
+                  "Roshly Tutorials",
                   style: TextStyle(color: Colors.white),
                   )
               )
@@ -177,6 +177,8 @@ with SingleTickerProviderStateMixin {
           });
         },
         children:  [
+          // Section 2
+          LessonPath(),
           // Section 1
           ListView(
             children: [
@@ -253,8 +255,6 @@ with SingleTickerProviderStateMixin {
               ),
             ],
           ),
-          // Section 2
-          LessonPath(),
           // Section 3
           Stepper(
             steps: [

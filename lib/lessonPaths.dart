@@ -175,9 +175,10 @@ class _Section1State extends State<Section1> {
   String _answer = '';
   String _answerResult = '';
   int _hearts = 5;
-    bool _allAnswersCorrect = false;
+  bool _allAnswersCorrect = false;
 
   final List<Map<String, dynamic>> _questions = [
+    
     {
       'question': 'What is the data type of the variable "x" in the following code: int x = 5;',
       'correctAnswer': 'int',
@@ -188,7 +189,99 @@ class _Section1State extends State<Section1> {
     },
     {
       'question': 'What is the difference between "var" and "dynamic" in Dart?',
-      'correctAnswer': 'var is for inferred type, dynamic is for explicit type',
+      'correctAnswer': 'type',
+    },
+    {
+      'question': 'What is the keyword used to define a function in Dart?',
+      'correctAnswer': 'function',
+    },
+    {
+      'question': 'What is the purpose of the "this" keyword in Dart?',
+      'correctAnswer': 'reference',
+    },
+    {
+      'question': 'What is the data type of the variable that can hold any type of value in Dart?',
+      'correctAnswer': 'dynamic',
+    },
+    {
+      'question': 'What is the keyword used to define a class in Dart?',
+      'correctAnswer': 'class',
+    },
+    {
+      'question': 'What is the purpose of the "super" keyword in Dart?',
+      'correctAnswer': 'inheritance',
+    },
+    {
+      'question': 'What is the keyword used to define an interface in Dart?',
+      'correctAnswer': 'abstract',
+    },
+    {
+      'question': 'What is the purpose of the "async" keyword in Dart?',
+      'correctAnswer': 'asynchronous',
+    },
+    {
+      'question': 'What is the keyword used to define a mixin in Dart?',
+      'correctAnswer': 'mixin',
+    },
+    {
+      'question': 'What is the purpose of the "await" keyword in Dart?',
+      'correctAnswer': 'pause',
+    },
+    {
+      'question': 'What is the keyword used to define a stream in Dart?',
+      'correctAnswer': 'stream',
+    },
+    {
+      'question': 'What is the purpose of the "yield" keyword in Dart?',
+      'correctAnswer': 'produce',
+    },
+    {
+      'question': 'What is the keyword used to define a library in Dart?',
+      'correctAnswer': 'library',
+    },
+    {
+      'question': 'What is the purpose of the "import" keyword in Dart?',
+      'correctAnswer': 'include',
+    },
+    {
+      'question': 'What is the keyword used to define a part in Dart?',
+      'correctAnswer': 'part',
+    },
+    {
+      'question': 'What is the purpose of the "export" keyword in Dart?',
+      'correctAnswer': 'share',
+    },
+    {
+      'question': 'What is the keyword used to define a factory in Dart?',
+      'correctAnswer': 'factory',
+    },
+    {
+      'question': 'What is the purpose of the "static" keyword in Dart?',
+      'correctAnswer': 'shared',
+    },
+    {
+      'question': 'What is the keyword used to define a getter in Dart?',
+      'correctAnswer': 'get',
+    },
+    {
+      'question': 'What is the purpose of the "set" keyword in Dart?',
+      'correctAnswer': 'assign',
+    },
+    {
+      'question': 'What is the keyword used to define a constructor in Dart?',
+      'correctAnswer': 'constructor',
+    },
+    {
+      'question': 'What is the purpose of the "try" keyword in Dart?',
+      'correctAnswer': 'attempt',
+    },
+    {
+      'question': 'What is the keyword used to define a catch block in Dart?',
+      'correctAnswer': 'catch',
+    },
+    {
+      'question': 'What is the purpose of the "finally" keyword in Dart?',
+      'correctAnswer': 'cleanup',
     },
   ];
 
@@ -220,6 +313,7 @@ class _Section1State extends State<Section1> {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
+                  Image.asset('images/Learning-rafiki.png'),
                   Text(_questions[_currentQuestion]['question']),
                   const SizedBox(height: 10),
                   Center(
@@ -315,6 +409,25 @@ class Section2 extends StatefulWidget {
 }
 
 class _Section2State extends State<Section2> {
+  int _currentQuestion = 0;
+  String _answer = '';
+  String _answerResult = '';
+  int _hearts = 5;
+  bool _allAnswersCorrect = false;
+
+  final List<Map<String, dynamic>> _questions = [
+    
+    {
+      'question': 'What is the data type of the variable "x" in the following code: int x = 5;',
+      'correctAnswer': 'int',
+    },
+    {
+      'question': 'What is the purpose of the "final" keyword in Dart is to declare a ?',
+      'correctAnswer': 'constant',
+    },
+    
+  ];
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
