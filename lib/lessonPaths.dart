@@ -207,6 +207,7 @@ class Section1 extends StatefulWidget {
   State<Section1> createState() => _Section1State();
 }
 
+
 class _Section1State extends State<Section1> {
   int _currentQuestion = 0;
   String _answer = '';
@@ -679,6 +680,110 @@ class Section3 extends StatefulWidget {
 }
 
 class _Section3State extends State<Section3> {
+  int _currentQuestion = 0;
+  String _answer = '';
+  String _answerResult = '';
+  int _hearts = 5;
+  bool _allAnswersCorrect = false;
+  final List<Map<String, dynamic>> _questions = [
+    {
+    'question': 'What is the term for a function that does not return a value in Dart?',
+    'correctAnswer': 'Void',
+    },
+    {
+      'question': 'What is the keyword used to define a function parameter in Dart?',
+      'correctAnswer': 'Required',
+    },
+    {
+      'question': 'What is the keyword used to define an optional function parameter in Dart?',
+      'correctAnswer': 'Optional',
+    },
+    {
+      'question': 'What is the term for a function that can be used as an argument to another function in Dart?',
+      'correctAnswer': 'Callback',
+    },
+    {
+      'question': 'What is the term for a function that is defined inside another function in Dart?',
+      'correctAnswer': 'Nested',
+    },
+    {
+      'question': 'What is the term for a function that can be assigned to a variable in Dart?',
+      'correctAnswer': 'Lambda',
+    },
+    {
+      'question': 'What is the keyword used to define a function that can be used as a constructor in Dart?',
+      'correctAnswer': 'Factory',
+    },
+    {
+      'question': 'What is the term for a function that is used to initialize an object in Dart?',
+      'correctAnswer': 'Constructor',
+    },
+    {
+      'question': 'What is the term for a function that is used to perform a specific task in Dart?',
+      'correctAnswer': 'Method',
+    },
+    {
+      'question': 'What is the term for a function that is used to extend the functionality of a class in Dart?',
+      'correctAnswer': 'Extension',
+    },
+    {
+      'question': 'What is the keyword used to define a function that can be used as an event handler in Dart?',
+      'correctAnswer': 'Async',
+    },
+    {
+      'question': 'What is the term for a function that is used to handle asynchronous operations in Dart?',
+      'correctAnswer': 'Future',
+    },
+    {
+      'question': 'What is the term for a function that is used to handle errors in Dart?',
+      'correctAnswer': 'Catch',
+    },
+    {
+      'question': 'What is the term for a function that is used to throw an exception in Dart?',
+      'correctAnswer': 'Throw',
+    },
+    {
+      'question': 'What is the term for a function that is used to rethrow an exception in Dart?',
+      'correctAnswer': 'Rethrow',
+    },
+    {
+      'question': 'What is the term for a function that is used to define a recursive function in Dart?',
+      'correctAnswer': 'Recursive',
+    },
+    {
+      'question': 'What is the term for a function that is used to define a higher-order function in Dart?',
+      'correctAnswer': 'Higher',
+    },
+    {
+      'question': 'What is the term for a function that is used to define a pure function in Dart?',
+      'correctAnswer': 'Pure',
+    },
+    {
+      'question': 'What is the term for a function that is used to define a closure in Dart?',
+      'correctAnswer': 'Closure',
+    },
+    {
+      'question': 'What is the term for a function that is used to define a generator in Dart?',
+      'correctAnswer': 'Generator',
+    },
+    {
+      'question': 'What is the term for a function that is used to define an iterator in Dart?',
+      'correctAnswer': 'Iterator',
+    },
+    {
+      'question': 'What is the term for a function that is used to define a stream in Dart?',
+      'correctAnswer': 'Stream',
+    },
+    {
+      'question': 'What is the term for a function that is used to define a future in Dart?',
+      'correctAnswer': 'Future',
+    },
+    {
+      'question': 'What is the term for a function that is used to define a async/await in Dart?',
+      'correctAnswer': 'Await',
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -686,14 +791,99 @@ class _Section3State extends State<Section3> {
         title: Text('Functions'),
       ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            widget.completeSection();
-            Navigator.pop(context);
-          },
-          child: Text('Complete Section 3'),
+        child: ListView(
+          children: [
+            Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.blueAccent, width: 2),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  Image.asset('images/Stress-rafiki.png'),
+                  Text(_questions[_currentQuestion]['question']),
+                  const SizedBox(height: 10),
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              decoration: const InputDecoration(
+                                labelText: 'answer',
+                                hintText: 'Enter answer',
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.blue),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.green),
+                                ),
+                              ),
+                              onChanged: (value) {
+                                setState(() {
+                                  _answer = value;
+                                });
+                              },
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.send),
+                            onPressed: () {
+                              if (_answer == _questions[_currentQuestion]['correctAnswer']) {
+                                setState(() {
+                                  _answerResult = 'Correct!';
+                                  if (_currentQuestion == _questions.length - 1) {
+                                    _allAnswersCorrect = true;
+                                  } else {
+                                    _nextQuestion();
+                                  }
+                                });
+                              } else {
+                                setState(() {
+                                  _answerResult = 'Incorrect. The correct answer is ${_questions[_currentQuestion]['correctAnswer']}.';
+                                  _hearts = _hearts - 1;
+                                });
+                                _saveHearts();
+                              }
+                              _nextQuestion();
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Text(_answerResult),
+                ],
+              ),
+            ),
+            _allAnswersCorrect
+              ? ElevatedButton(
+                  onPressed: () {
+                    widget.completeSection();
+                    Navigator.pop(context);
+                  },
+                  child: Text('Complete Section 1'),
+                )
+              : Container(),
+          ],
         ),
       ),
     );
+  }
+
+  void _nextQuestion() {
+    setState(() {
+      _currentQuestion++;
+      _answer = '';
+      _answerResult = '';
+    });
+  }
+
+  _saveHearts() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt('hearts', _hearts);
   }
 }
