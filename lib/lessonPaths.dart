@@ -48,12 +48,20 @@ class _LessonPathState extends State<LessonPath> {
     _saveCompletionStatus();
   }
 
+  void completeSection4() {
+    setState(() {
+      _section4Completed = true;
+    });
+    _saveCompletionStatus();
+  }
+
   _loadCompletionStatus() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _section1Completed = prefs.getBool('section1Completed')?? false;
       _section2Completed = prefs.getBool('section2Completed')?? false;
       _section3Completed = prefs.getBool('section3Completed')?? false;
+      _section4Completed = prefs.getBool('section4Completed')?? false;
     });
   }
 
@@ -62,6 +70,7 @@ class _LessonPathState extends State<LessonPath> {
     prefs.setBool('section1Completed', _section1Completed);
     prefs.setBool('section2Completed', _section2Completed);
     prefs.setBool('section3Completed', _section3Completed);
+    prefs.setBool('section4Completed', _section4Completed);
   }
 
   @override
@@ -150,6 +159,34 @@ class _LessonPathState extends State<LessonPath> {
                     ),
                     padding: const EdgeInsets.all(10),
                     child: Text('Functions'),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 15),
+            // Functions
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                GestureDetector(
+                  onTap: _section1Completed && _section2Completed && !_section3Completed
+                      ? () {
+                          setState(() {
+                            _currentSection = 3;
+                          });
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Section3(completeSection3)),
+                          );
+                        }
+                      : null,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: _section3Completed ? Colors.green : Colors.grey,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    child: Text('Data Structures'),
                   ),
                 ),
               ],
@@ -293,7 +330,7 @@ class _Section1State extends State<Section1> {
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
-              const Text('Lesson Path'),
+              const Text('Datatypes'),
               const Spacer(),
               Text('$_hearts'),
               const Icon(Icons.favorite, color: Colors.red),
@@ -416,14 +453,105 @@ class _Section2State extends State<Section2> {
   bool _allAnswersCorrect = false;
 
   final List<Map<String, dynamic>> _questions = [
-    
     {
-      'question': 'What is the data type of the variable "x" in the following code: int x = 5;',
-      'correctAnswer': 'int',
+    'question': 'What keyword is used to define a conditional statement in Dart?',
+    'correctAnswer': 'if',
     },
     {
-      'question': 'What is the purpose of the "final" keyword in Dart is to declare a ?',
-      'correctAnswer': 'constant',
+      'question': 'What keyword is used to define an alternative conditional statement in Dart?',
+      'correctAnswer': 'else',
+    },
+    {
+      'question': 'What keyword is used to define a series of conditional statements in Dart?',
+      'correctAnswer': 'else if',
+    },
+    {
+      'question': 'What operator is used to check if two values are equal in a conditional statement?',
+      'correctAnswer': '==',
+    },
+    {
+      'question': 'What operator is used to check if two values are not equal in a conditional statement?',
+      'correctAnswer': '!=',
+    },
+    {
+      'question': 'What operator is used to check if a value is greater than another in a conditional statement?',
+      'correctAnswer': '>',
+    },
+    {
+      'question': 'What operator is used to check if a value is less than another in a conditional statement?',
+      'correctAnswer': '<',
+    },
+    {
+      'question': 'What operator is used to check if a value is greater than or equal to another in a conditional statement?',
+      'correctAnswer': '>=',
+    },
+    {
+      'question': 'What operator is used to check if a value is less than or equal to another in a conditional statement?',
+      'correctAnswer': '<=',
+    },
+    {
+      'question': 'What keyword is used to check if a value is null in a conditional statement?',
+      'correctAnswer': 'null',
+    },
+    {
+      'question': 'What keyword is used to check if a value is not null in a conditional statement?',
+      'correctAnswer': '!',
+    },
+    {
+      'question': 'What keyword is used to perform a logical AND operation in a conditional statement?',
+      'correctAnswer': '&&',
+    },
+    {
+      'question': 'What keyword is used to perform a logical OR operation in a conditional statement?',
+      'correctAnswer': '||',
+    },
+    {
+      'question': 'What keyword is used to perform a logical NOT operation in a conditional statement?',
+      'correctAnswer': '!',
+    },
+    {
+      'question': 'What keyword is used to perform a ternary operation in a conditional statement?',
+      'correctAnswer': '?:',
+    },
+    {
+      'question': 'What keyword is used to perform a switch statement in a conditional statement?',
+      'correctAnswer': 'switch',
+    },
+    {
+      'question': 'What keyword is used to define a case in a switch statement?',
+      'correctAnswer': 'case',
+    },
+    {
+      'question': 'What keyword is used to define a default case in a switch statement?',
+      'correctAnswer': 'default',
+    },
+    {
+      'question': 'What keyword is used to break out of a switch statement?',
+      'correctAnswer': 'break',
+    },
+    {
+      'question': 'What keyword is used to continue to the next case in a switch statement?',
+      'correctAnswer': 'continue',
+    },
+    {
+      'question': 'What keyword is used to check if a value is contained in a list in a conditional statement?',
+      'correctAnswer': 'in',
+    },
+    {
+      'question': 'What keyword is used to check if a value is not contained in a list in a conditional statement?',
+      'correctAnswer': '!in',
+    },
+    {
+      'question': 'What keyword is used to check if a value is between two values in a conditional statement?',
+      'correctAnswer': 'between',
+    },
+    {
+      'question': 'What keyword is used to check if a value is not between two values in a conditional statement?',
+      'correctAnswer': '!between',
+    },
+    {
+      'question': 'What keyword is used to check if a value is null-aware in a conditional statement?',
+      'correctAnswer': '?.',
     },
     
   ];
@@ -432,22 +560,112 @@ class _Section2State extends State<Section2> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Section 2'),
+        title: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              const Text('Conditionals'),
+              const Spacer(),
+              Text('$_hearts'),
+              const Icon(Icons.favorite, color: Colors.red),
+            ],
+          ),
+        ),
       ),
       body: Center(
         child: ListView(
           children: [
-             ElevatedButton(
-              onPressed: () {
-                widget.completeSection();
-                Navigator.pop(context);
-              },
-              child: Text('Complete Section 2'),
+            Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.blueAccent, width: 2),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  Image.asset('images/Thinking face-rafiki.png'),
+                  Text(_questions[_currentQuestion]['question']),
+                  const SizedBox(height: 10),
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              decoration: const InputDecoration(
+                                labelText: 'answer',
+                                hintText: 'Enter answer',
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.blue),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.green),
+                                ),
+                              ),
+                              onChanged: (value) {
+                                setState(() {
+                                  _answer = value;
+                                });
+                              },
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.send),
+                            onPressed: () {
+                              if (_answer == _questions[_currentQuestion]['correctAnswer']) {
+                                setState(() {
+                                  _answerResult = 'Correct!';
+                                  if (_currentQuestion == _questions.length - 1) {
+                                    _allAnswersCorrect = true;
+                                  } else {
+                                    _nextQuestion();
+                                  }
+                                });
+                              } else {
+                                setState(() {
+                                  _answerResult = 'Incorrect. The correct answer is ${_questions[_currentQuestion]['correctAnswer']}.';
+                                  _hearts = _hearts - 1;
+                                });
+                                _saveHearts();
+                              }
+                              _nextQuestion();
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Text(_answerResult),
+                ],
+              ),
             ),
+            _allAnswersCorrect
+             ? ElevatedButton(
+                  onPressed: () {
+                    widget.completeSection();
+                    Navigator.pop(context);
+                  },
+                  child: Text('Complete Section 1'),
+                )
+              : Container(),
           ],
         ),
       ),
     );
+  }
+  void _nextQuestion() {
+    setState(() {
+      _currentQuestion++;
+      _answer = '';
+      _answerResult = '';
+    });
+  }
+
+  _saveHearts() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt('hearts', _hearts);
   }
 }
 
@@ -465,7 +683,7 @@ class _Section3State extends State<Section3> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Section 3'),
+        title: Text('Functions'),
       ),
       body: Center(
         child: ElevatedButton(
