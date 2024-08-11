@@ -107,7 +107,8 @@ with SingleTickerProviderStateMixin {
   bool _section2Completed = false;
   bool _section3Completed = false;
 
-  List<bool> _correctAnswers = [false, false, false, false];
+  List<bool?> _correctAnswers = List.filled(5, null);
+  
 
   @override
   void initState() {
@@ -160,7 +161,7 @@ with SingleTickerProviderStateMixin {
               (
                 opacity: _animation,
                 child: const Text(
-                  "Roshly Tutorials",
+                  "Roshly",
                   style: TextStyle(color: Colors.white),
                   )
               )
@@ -256,57 +257,871 @@ with SingleTickerProviderStateMixin {
             ],
           ),
           // Section 3
-          Stepper(
-            steps: [
-              Step(
-                title: const Text('If-Else Statements'),
-                content: DragTarget<String>(
-                        onWillAccept: (data) => true,
-                        onAccept: (data) {
-                          setState(() {
-                            if (data == 'correctAnswer') {
-                              _correctAnswers[0] = true;
-                            }
-                          });
-                        },
-                        builder: (context, candidateData, rejectedData) {
-                          return Column(
-                            children: [
-                              Text('Write a program to check if a number is even or odd.'),
-                              
-                              _correctAnswers[0]
-                                  ? Text('Correct!', style: TextStyle(color: Colors.green))
-                                  : Text(''),
-                            ],
-                          );
-                        },
-                      ),
-      
-                isActive: _currentStep >= 0,
+        Stepper(
+          steps: [
+            Step(
+              title: const Text('If-Else Statements'),
+              content: DragTarget<String>(
+                onWillAccept: (data) => true,
+                onAccept: (data) {
+                  setState(() {
+                    if (data == 'if (number % 2 == 0) {\n  print("The number is even");\n} else {\n  print("The number is odd");\n}') {
+                      _correctAnswers[0] = true;
+                    } else {
+                      _correctAnswers[0] = false;
+                    }
+                  });
+                },
+                builder: (context, candidateData, rejectedData) {
+                  return Column(
+                    children: [
+                      const Text('Write a program to check if a number is even or odd.'),
+                      _correctAnswers[0] == null
+                      ? const Text('Drag Answer')
+                      : _correctAnswers[0] != null && _correctAnswers[0]!
+                        ? const Text('Correct!', style: TextStyle(color: Colors.green))
+                        : const Text('Wrong!', style: TextStyle(color: Colors.red)),
+                      const SizedBox(width: 30),
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text('Answer 1'),
+                                    content: const Text('if (number % 2 == 0) {\n  print("The number is even");\n} else {\n  print("The number is odd");\n}'),
+                                    actions: [
+                                      ElevatedButton(
+                                        child: const Text('Close'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          child: Draggable<String>(
+                            data: 'if (number % 2 == 0) {\n  print("The number is even");\n} else {\n  print("The number is odd");\n}',
+                            feedback: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(width: 1),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: const EdgeInsets.all(10),
+                              child: const Text(
+                                      '**if** ...',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.blue,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    )
+                            ),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(width: 1),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: const EdgeInsets.all(10),
+                              child: const Text(
+                                'if .....',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text('Answer 2'),
+                                  content: const Text('if (number % 2 != 0) {\n  print("The number is even");\n} else {\n  print("The number is odd");\n}'),
+                                  actions: [
+                                    ElevatedButton(
+                                      child: const Text('Close'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: Draggable<String>(
+                            data: 'if (number % 2 != 0) {\n  print("The number is even");\n} else {\n  print("The number is odd");\n}',
+                            feedback: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(width: 1),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: const EdgeInsets.all(10),
+                              child: const Text(
+                                      '**if** ...',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.green,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    )
+                            ),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(width: 1),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: EdgeInsets.all(10),
+                              child: const Text(
+                                'if ...',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text('Answer 3'),
+                                  content: const Text('if (number % 3 == 0) {\n  print("The number is even");\n} else {\n  print("The number is odd");\n}'),
+                                  actions: [
+                                    ElevatedButton(
+                                      child: const Text('Close'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: Draggable<String>(
+                            data: 'if (number % 3 == 0) {\n  print("The number is even");\n} else {\n  print("The number is odd");\n}',
+                            feedback: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(width: 1),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: const EdgeInsets.all(10),
+                              child: const Text(
+                                      '**if** ...',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.pink,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    )
+                            ),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(width: 1),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: const EdgeInsets.all(10),
+                              child: const Text(
+                                'if ...',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                        ),
+                          ],
+                        ),
+                      )
+                    ],
+                  );
+                },
               ),
-              Step(
-                title: const Text('Loops'),
-                content: const Text('Write a program to print the numbers from 1 to 10.'),
-                isActive: _currentStep >= 1,
+              isActive: _currentStep >= 0,
+            ),
+            Step(
+              title: const Text('For Loop Statements'),
+              content: DragTarget<String>(
+                onWillAccept: (data) => true,
+                onAccept: (data) {
+                  setState(() {
+                    if (data == 'for (int i = 0; i < 5; i++) {\n  print(i);\n}') {
+                      _correctAnswers[1] = true;
+                    } else {
+                      _correctAnswers[1] = false;
+                    }
+                  });
+                },
+                builder: (context, candidateData, rejectedData) {
+                  return Column(
+                    children: [
+                      const Text('Write a program to print the numbers from 0 to 4.'),
+                      _correctAnswers[1] == null
+                      ? const Text('Drag Answer')
+                      : _correctAnswers[1] != null && _correctAnswers[1]!
+                        ? const Text('Correct!', style: TextStyle(color: Colors.green))
+                        : const Text('Wrong!', style: TextStyle(color: Colors.red)),
+                      const SizedBox(width: 30),
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text('Answer 1'),
+                                      content: const Text('for (int i = 0; i < 5; i++) {\n  print(i);\n}'),
+                                      actions: [
+                                        ElevatedButton(
+                                          child: const Text('Close'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Draggable<String>(
+                                data: 'for (int i = 0; i < 4; i++) {\n  print(i);\n}',
+                                feedback: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(width: 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Text(
+                                    '**for** ...',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(width: 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Text(
+                                    'for ...',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text('Answer 2'),
+                                      content: const Text('for (int i = 2; i < 5; i++) {\n  print(i);\n}'),
+                                      actions: [
+                                        ElevatedButton(
+                                          child: const Text('Close'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Draggable<String>(
+                                data: 'for (int i = 0; i < 5; i++) {\n  print(i);\n}',
+                                feedback: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(width: 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Text(
+                                    '**for** ...',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(width: 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Text(
+                                    'for ...',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ),
+                             GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text('Answer 3'),
+                                      content: const Text('for (int i = 0; i < 5; i++) {\n  print(i);\n}'),
+                                      actions: [
+                                        ElevatedButton(
+                                          child: const Text('Close'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Draggable<String>(
+                                data: 'for (int i = 0; i < 5; i++) {\n  print(i);\n}',
+                                feedback: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(width: 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Text(
+                                    '**for** ...',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(width: 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Text(
+                                    'for ...',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  );
+                },
               ),
-              Step(
-                title: const Text('Functions'),
-                content: const Text('What is the purpose of a function in programming?'),
-                isActive: _currentStep >= 2,
+              isActive: _currentStep >= 2,
+            ),
+
+            Step(
+              title: const Text('List Operations'),
+              content: DragTarget<String>(
+                onWillAccept: (data) => true,
+                onAccept: (data) {
+                  setState(() {
+                    if (data == 'List<int> numbers = [0, 1, 2, 3, 4];\nfor (int num in numbers) {\n  print(num);\n}') {
+                      _correctAnswers[2] = true;
+                    } else {
+                      _correctAnswers[2] = false;
+                    }
+                  });
+                },
+                builder: (context, candidateData, rejectedData) {
+                  return Column(
+                    children: [
+                      const Text('Write a program to print the numbers in a list from 0 to 4.'),
+                      _correctAnswers[2] == null
+                      ? const Text('Drag Answer')
+                      : _correctAnswers[2] != null && _correctAnswers[2]!
+                        ? const Text('Correct!', style: TextStyle(color: Colors.green))
+                        : const Text('Wrong!', style: TextStyle(color: Colors.red)),
+                      const SizedBox(width: 30),
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text('Answer 1'),
+                                      content: const Text('List<int> numbers = [0, 1, 2, 3, 4];\nfor (int num in numbers) {\n  print(num);\n}'),
+                                      actions: [
+                                        ElevatedButton(
+                                          child: const Text('Close'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Draggable<String>(
+                                data: 'List<int> numbers = [0, 1, 2, 3, 4];\nfor (int num in numbers) {\n  print(num);\n}',
+                                feedback: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(width: 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Text(
+                                    '**List** ...',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(width: 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Text(
+                                    'List ...',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            // Add more answer options here
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text('Answer 1'),
+                                      content: const Text('List<int> numbers = [0, 1, 2, 3, 4];\nfor (int num in numbers) {\n  print(num);\n}'),
+                                      actions: [
+                                        ElevatedButton(
+                                          child: const Text('Close'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Draggable<String>(
+                                data: 'List<int> numbers = 0, 1, 2, 3, 4;\nfor (int num in numbers) {\n  print(num);\n}',
+                                feedback: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(width: 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Text(
+                                    '**List** ...',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(width: 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Text(
+                                    'List ...',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text('Answer 1'),
+                                      content: const Text('List<int> numbers = [0, 1, 2, 3, 4];\nfor (int num in numbers) {\n  print(num);\n}'),
+                                      actions: [
+                                        ElevatedButton(
+                                          child: const Text('Close'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Draggable<String>(
+                                data: 'List<int> numbers = [0, 1, 2, 3, 4];\nfor (int num in numbers) {\n  print(num);\n}',
+                                feedback: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(width: 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Text(
+                                    '**List** ...',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(width: 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Text(
+                                    'List ...',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  );
+                },
               ),
-              Step(
-                title: const Text('Arrays'),
-                content: const Text('What is the difference between an array and a list?'),
-                isActive: _currentStep >= 3,
+              isActive: _currentStep >= 3,
+            ),
+
+            Step(
+              title: const Text('Function Operations'),
+              content: DragTarget<String>(
+                onWillAccept: (data) => true,
+                onAccept: (data) {
+                  setState(() {
+                    if (data == 'int add(int a, int b) {\n  return a + b;\n}') {
+                      _correctAnswers[3] = true;
+                    } else {
+                      _correctAnswers[3] = false;
+                    }
+                  });
+                },
+                builder: (context, candidateData, rejectedData) {
+                  return Column(
+                    children: [
+                      const Text('Write a function that takes two integers and returns their sum.'),
+                      _correctAnswers[3] == null
+                      ? const Text('Drag Answer')
+                      : _correctAnswers[3] != null && _correctAnswers[3]!
+                        ? const Text('Correct!', style: TextStyle(color: Colors.green))
+                        : const Text('Wrong!', style: TextStyle(color: Colors.red)),
+                      const SizedBox(width: 30),
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text('Answer 1'),
+                                      content: const Text('add(int a, int b) {\n  return a + b;\n}'),
+                                      actions: [
+                                        ElevatedButton(
+                                          child: const Text('Close'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Draggable<String>(
+                                data: 'int add(int a, int b) {\n  return a + b;\n}',
+                                feedback: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(width: 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Text(
+                                    '**Function** ...',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(width: 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Text(
+                                    'Function',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            // Add more answer options here
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text('Answer 1'),
+                                      content: const Text('int add(int a, int b) {\n  return a + b;\n}'),
+                                      actions: [
+                                        ElevatedButton(
+                                          child: const Text('Close'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Draggable<String>(
+                                data: 'int add(int a) {\n  return a + b;\n}',
+                                feedback: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(width: 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Text(
+                                    '**Function** ...',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(width: 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Text(
+                                    'Function',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text('Answer 1'),
+                                      content: const Text('int add() {\n  return a + b;\n}'),
+                                      actions: [
+                                        ElevatedButton(
+                                          child: const Text('Close'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Draggable<String>(
+                                data: 'int add(int a, int b) {\n  return a + b;\n}',
+                                feedback: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(width: 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Text(
+                                    '**Function** ...',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(width: 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Text(
+                                    'Function',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  );
+                },
               ),
-            ],
-            onStepTapped: (int index) {
-              setState(() {
-                _currentStep = index;
-              });
-            },
-            currentStep: _currentStep,
-          ),
+              isActive: _currentStep >= 4,
+            ),
+            // variables
+            Step(
+              title: const Text('Variable Operations'),
+              content: DragTarget<String>(
+                onWillAccept: (data) => true,
+                onAccept: (data) {
+                  setState(() {
+                    if (data == 'int x = 5;\nint y = 10;\nprint(x + y);') {
+                      _correctAnswers[3] = true;
+                    } else {
+                      _correctAnswers[3] = false;
+                    }
+                  });
+                },
+                builder: (context, candidateData, rejectedData) {
+                  return Column(
+                    children: [
+                      const Text('Write a program to add two variables x and y.'),
+                      _correctAnswers[3] == null
+                          ? const Text('Drag Answer')
+                          : _correctAnswers[3] != null && _correctAnswers[3]!
+                              ? const Text('Correct!', style: TextStyle(color: Colors.green))
+                              : const Text('Wrong!', style: TextStyle(color: Colors.red)),
+                      const SizedBox(width: 30),
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text('Answer 1'),
+                                      content: const Text('int x = 5;\nint y = 10;\nprint(x + y);'),
+                                      actions: [
+                                        ElevatedButton(
+                                          child: const Text('Close'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Draggable<String>(
+                                data: 'int x = 5;\nint y = 10;\nprint(x + y);',
+                                feedback: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(width: 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Text(
+                                    'int x = 5;\nint y = 10;\nprint(x + y);',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(width: 1),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.all(10),
+                                  child: const Text(
+                                    'int x = 5;\nint y = 10;\nprint(x + y);',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            // Add more answer options here
+                          ],
+                        ),
+                      )
+                    ],
+                  );
+                },
+              ),
+              isActive: _currentStep >= 4,
+            ),
+          ],
+          onStepTapped: (int index) {
+            setState(() {
+              _currentStep = index;
+            });
+          },
+          currentStep: _currentStep,
+        )
         ],
       ),
       // end of body
