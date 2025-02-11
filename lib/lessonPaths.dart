@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'globals.dart' as globals_lib;
+
 
 class LessonPath extends StatefulWidget {
   @override
@@ -19,7 +21,8 @@ class _LessonPathState extends State<LessonPath> {
   bool _section8Completed = false;
   bool _section9Completed = false;
   bool _section10Completed = false;
-
+  int _totalSections = 10;
+  int _completedSections = 0;
   
   @override
   void initState() {
@@ -128,11 +131,40 @@ class _LessonPathState extends State<LessonPath> {
 
   @override
   Widget build(BuildContext context) {
+    _completedSections = [
+    _section1Completed,
+    _section2Completed,
+    _section3Completed,
+    _section4Completed,
+    _section5Completed,
+    _section6Completed,
+    _section7Completed,
+    _section8Completed,
+    _section9Completed,
+    _section10Completed,
+  ].where((completed) => completed).length;
+
+  globals_lib.progress = _completedSections / _totalSections;
+  globals_lib.completed = _completedSections;
+  
+  
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: ListView(
           children: [
+            Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.only(top: 20),
+              child: const Text(
+                'Dart Exercises',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
             const Row(
               children: <Widget>[
                 Expanded(
@@ -140,7 +172,7 @@ class _LessonPathState extends State<LessonPath> {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Text('Start'),
+                  child: Text('Begin'),
                 ),
                 Expanded(
                   child: Divider(),
@@ -492,9 +524,56 @@ class _Section1State extends State<Section1> {
   String _answerResult = '';
   int _hearts = 5;
   bool _allAnswersCorrect = false;
+  final _answerController = TextEditingController();
+  Timer? _heartTimer;
+Timer? _countdownTimer; // new timer for countdown
+int _secondsUntilNextHeart = 30 * 60; // 30 minutes in seconds
+
+  @override
+  void initState() {
+    super.initState();
+    _loadHearts();
+    _startHeartTimer();
+    _startCountdownTimer(); // start the countdown timer
+  }
+
+  void _startHeartTimer() {
+  _heartTimer = Timer.periodic(const Duration(minutes: 30), (timer) {
+    if (_hearts < 5) {
+      setState(() {
+        _hearts++;
+        _saveHearts();
+        _secondsUntilNextHeart = 30 * 60; // reset the countdown when heart is less than 5
+      });
+    }
+  });
+}
+
+void _startCountdownTimer() {
+  print('Starting countdown timer'); // add this line
+  _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    setState(() {
+      if (_secondsUntilNextHeart > 0) {
+        _secondsUntilNextHeart--;
+      } else {
+        if (_hearts < 5) {
+          _hearts++;
+          _saveHearts();
+        }
+        _secondsUntilNextHeart = 30 * 60; // reset the countdown
+      }
+    });
+  });
+}
+
+  Future<void> _loadHearts() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _hearts = prefs.getInt('hearts') ?? 5;
+    });
+  }
 
   final List<Map<String, dynamic>> _questions = [
-    
     {
       'question': 'What is the data type of the variable "x" in the following code: int x = 5;',
       'correctAnswer': 'int',
@@ -519,90 +598,23 @@ class _Section1State extends State<Section1> {
       'question': 'What is the data type of the variable that can hold any type of value in Dart?',
       'correctAnswer': 'dynamic',
     },
-    {
-      'question': 'What is the keyword used to define a class in Dart?',
-      'correctAnswer': 'class',
-    },
-    {
-      'question': 'What is the purpose of the "super" keyword in Dart?',
-      'correctAnswer': 'inheritance',
-    },
-    {
-      'question': 'What is the keyword used to define an interface in Dart?',
-      'correctAnswer': 'abstract',
-    },
-    {
-      'question': 'What is the purpose of the "async" keyword in Dart?',
-      'correctAnswer': 'asynchronous',
-    },
-    {
-      'question': 'What is the keyword used to define a mixin in Dart?',
-      'correctAnswer': 'mixin',
-    },
-    {
-      'question': 'What is the purpose of the "await" keyword in Dart?',
-      'correctAnswer': 'pause',
-    },
-    {
-      'question': 'What is the keyword used to define a stream in Dart?',
-      'correctAnswer': 'stream',
-    },
-    {
-      'question': 'What is the purpose of the "yield" keyword in Dart?',
-      'correctAnswer': 'produce',
-    },
-    {
-      'question': 'What is the keyword used to define a library in Dart?',
-      'correctAnswer': 'library',
-    },
-    {
-      'question': 'What is the purpose of the "import" keyword in Dart?',
-      'correctAnswer': 'include',
-    },
-    {
-      'question': 'What is the keyword used to define a part in Dart?',
-      'correctAnswer': 'part',
-    },
-    {
-      'question': 'What is the purpose of the "export" keyword in Dart?',
-      'correctAnswer': 'share',
-    },
-    {
-      'question': 'What is the keyword used to define a factory in Dart?',
-      'correctAnswer': 'factory',
-    },
-    {
-      'question': 'What is the purpose of the "static" keyword in Dart?',
-      'correctAnswer': 'shared',
-    },
-    {
-      'question': 'What is the keyword used to define a getter in Dart?',
-      'correctAnswer': 'get',
-    },
-    {
-      'question': 'What is the purpose of the "set" keyword in Dart?',
-      'correctAnswer': 'assign',
-    },
-    {
-      'question': 'What is the keyword used to define a constructor in Dart?',
-      'correctAnswer': 'constructor',
-    },
-    {
-      'question': 'What is the purpose of the "try" keyword in Dart?',
-      'correctAnswer': 'attempt',
-    },
-    {
-      'question': 'What is the keyword used to define a catch block in Dart?',
-      'correctAnswer': 'catch',
-    },
-    {
-      'question': 'What is the purpose of the "finally" keyword in Dart?',
-      'correctAnswer': 'cleanup',
-    },
   ];
+  @override
+  void dispose() {
+    _heartTimer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+
+    String _formatDuration(Duration duration) {
+  int seconds = duration.inSeconds;
+  int minutes = seconds ~/ 60;
+  int remainingSeconds = seconds % 60;
+  return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}'; // format the countdown as MM:SS
+}
+
     return Scaffold(
       appBar: AppBar(
         title: Padding(
@@ -613,6 +625,7 @@ class _Section1State extends State<Section1> {
               const Spacer(),
               Text('$_hearts'),
               const Icon(Icons.favorite, color: Colors.red),
+              Text(' ${_formatDuration(Duration(seconds: _secondsUntilNextHeart))}'), // display the countdown
             ],
           ),
         ),
@@ -639,6 +652,7 @@ class _Section1State extends State<Section1> {
                         children: [
                           Expanded(
                             child: TextField(
+                              controller: _answerController,
                               decoration: InputDecoration(
                                 labelText: 'Answer',
                                 hintText: 'Enter answer',
@@ -659,29 +673,31 @@ class _Section1State extends State<Section1> {
                             ),
                           ),
                           IconButton(
-                            icon: Icon(Icons.send),
-                            onPressed: _answer.isNotEmpty // Disable the button if the answer is empty
-                              ? () {
-                                  if (_answer == _questions[_currentQuestion]['correctAnswer']) {
-                                    setState(() {
-                                      _answer = ''; // Clear the answer when it's correct
-                                      _answerResult = 'Correct!';
-                                      if (_currentQuestion == _questions.length - 1) {
-                                        _allAnswersCorrect = true;
-                                      } else {
-                                        _nextQuestion();
-                                      }
-                                    });
-                                  } else {
-                                    setState(() {
-                                      _answerResult = 'Incorrect. The correct answer is ${_questions[_currentQuestion]['correctAnswer']}.';
-                                      _hearts = _hearts - 1;
-                                    });
-                                    _saveHearts();
+                              icon: const Icon(Icons.send),
+                              onPressed: _hearts > 0 && _answer.isNotEmpty
+                                ? () {
+                                    if (_answer == _questions[_currentQuestion]['correctAnswer']) {
+                                      setState(() {
+                                        _answerResult = 'Correct!';
+                                        if (_currentQuestion == _questions.length - 1) {
+                                          _allAnswersCorrect = true;
+                                        } else {
+                                          _nextQuestion();
+                                        }
+                                        _answer = ''; // Clear the answer when it's correct
+                                      });
+                                    } else {
+                                      setState(() {
+                                        _answerResult = 'Incorrect. The correct answer';
+                                        _hearts = _hearts - 1;
+                                        _answer = ''; // Clear the answer when it's incorrect
+                                      });
+                                      _saveHearts();
+                                    }
+                                    _answerController.clear(); 
                                   }
-                                }
-                              : null, // Disable the button if the answer is empty
-                          ),
+                                : null, // Disable the button if the answer is empty or hearts are zero
+                            )
                         ],
                       ),
                     ),
@@ -734,11 +750,38 @@ class _Section2State extends State<Section2> {
   String _answerResult = '';
   int _hearts = 5;
   bool _allAnswersCorrect = false;
+ final _answerController = TextEditingController();
+  Timer? _heartTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadHearts();
+    _startHeartTimer();
+  }
+
+  void _startHeartTimer() {
+    _heartTimer = Timer.periodic(const Duration(minutes: 30), (timer) {
+      if (_hearts < 5) {
+        setState(() {
+          _hearts++;
+          _saveHearts();
+        });
+      }
+    });
+  }
+
+  Future<void> _loadHearts() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _hearts = prefs.getInt('hearts') ?? 5;
+    });
+  }
 
   final List<Map<String, dynamic>> _questions = [
     {
-    'question': 'What keyword is used to define a conditional statement in Dart?',
-    'correctAnswer': 'if',
+      'question': 'What keyword is used to define a conditional statement in Dart?',
+      'correctAnswer': 'if',
     },
     {
       'question': 'What keyword is used to define an alternative conditional statement in Dart?',
@@ -764,80 +807,12 @@ class _Section2State extends State<Section2> {
       'question': 'What operator is used to check if a value is less than another in a conditional statement?',
       'correctAnswer': '<',
     },
-    {
-      'question': 'What operator is used to check if a value is greater than or equal to another in a conditional statement?',
-      'correctAnswer': '>=',
-    },
-    {
-      'question': 'What operator is used to check if a value is less than or equal to another in a conditional statement?',
-      'correctAnswer': '<=',
-    },
-    {
-      'question': 'What keyword is used to check if a value is null in a conditional statement?',
-      'correctAnswer': 'null',
-    },
-    {
-      'question': 'What keyword is used to check if a value is not null in a conditional statement?',
-      'correctAnswer': '!',
-    },
-    {
-      'question': 'What keyword is used to perform a logical AND operation in a conditional statement?',
-      'correctAnswer': '&&',
-    },
-    {
-      'question': 'What keyword is used to perform a logical OR operation in a conditional statement?',
-      'correctAnswer': '||',
-    },
-    {
-      'question': 'What keyword is used to perform a logical NOT operation in a conditional statement?',
-      'correctAnswer': '!',
-    },
-    {
-      'question': 'What keyword is used to perform a ternary operation in a conditional statement?',
-      'correctAnswer': '?:',
-    },
-    {
-      'question': 'What keyword is used to perform a switch statement in a conditional statement?',
-      'correctAnswer': 'switch',
-    },
-    {
-      'question': 'What keyword is used to define a case in a switch statement?',
-      'correctAnswer': 'case',
-    },
-    {
-      'question': 'What keyword is used to define a default case in a switch statement?',
-      'correctAnswer': 'default',
-    },
-    {
-      'question': 'What keyword is used to break out of a switch statement?',
-      'correctAnswer': 'break',
-    },
-    {
-      'question': 'What keyword is used to continue to the next case in a switch statement?',
-      'correctAnswer': 'continue',
-    },
-    {
-      'question': 'What keyword is used to check if a value is contained in a list in a conditional statement?',
-      'correctAnswer': 'in',
-    },
-    {
-      'question': 'What keyword is used to check if a value is not contained in a list in a conditional statement?',
-      'correctAnswer': '!in',
-    },
-    {
-      'question': 'What keyword is used to check if a value is between two values in a conditional statement?',
-      'correctAnswer': 'between',
-    },
-    {
-      'question': 'What keyword is used to check if a value is not between two values in a conditional statement?',
-      'correctAnswer': '!between',
-    },
-    {
-      'question': 'What keyword is used to check if a value is null-aware in a conditional statement?',
-      'correctAnswer': '?.',
-    },
-    
   ];
+  @override
+  void dispose() {
+    _heartTimer?.cancel();
+    super.dispose();
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -877,6 +852,7 @@ class _Section2State extends State<Section2> {
                         children: [
                           Expanded(
                             child: TextField(
+                              controller: _answerController,
                               decoration: const InputDecoration(
                                 labelText: 'answer',
                                 hintText: 'Enter answer',
@@ -895,27 +871,31 @@ class _Section2State extends State<Section2> {
                             ),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.send),
-                            onPressed: () {
-                              if (_answer == _questions[_currentQuestion]['correctAnswer']) {
-                                setState(() {
-                                  _answerResult = 'Correct!';
-                                  if (_currentQuestion == _questions.length - 1) {
-                                    _allAnswersCorrect = true;
-                                  } else {
-                                    _nextQuestion();
+                              icon: const Icon(Icons.send),
+                              onPressed: _hearts > 0 && _answer.isNotEmpty
+                                ? () {
+                                    if (_answer == _questions[_currentQuestion]['correctAnswer']) {
+                                      setState(() {
+                                        _answerResult = 'Correct!';
+                                        if (_currentQuestion == _questions.length - 1) {
+                                          _allAnswersCorrect = true;
+                                        } else {
+                                          _nextQuestion();
+                                        }
+                                        _answer = ''; // Clear the answer when it's correct
+                                      });
+                                    } else {
+                                      setState(() {
+                                        _answerResult = 'Incorrect. The correct answer';
+                                        _hearts = _hearts - 1;
+                                        _answer = ''; // Clear the answer when it's incorrect
+                                      });
+                                      _saveHearts();
+                                    }
+                                    _answerController.clear(); 
                                   }
-                                });
-                              } else {
-                                setState(() {
-                                  _answerResult = 'Incorrect. The correct answer is ${_questions[_currentQuestion]['correctAnswer']}.';
-                                  _hearts = _hearts - 1;
-                                });
-                                _saveHearts();
-                              }
-                              _nextQuestion();
-                            },
-                          ),
+                                : null, // Disable the button if the answer is empty or hearts are zero
+                            )
                         ],
                       ),
                     ),
@@ -967,6 +947,34 @@ class _Section3State extends State<Section3> {
   String _answerResult = '';
   int _hearts = 5;
   bool _allAnswersCorrect = false;
+  final _answerController = TextEditingController();
+  Timer? _heartTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadHearts();
+    _startHeartTimer();
+  }
+
+  void _startHeartTimer() {
+    _heartTimer = Timer.periodic(const Duration(minutes: 30), (timer) {
+      if (_hearts < 5) {
+        setState(() {
+          _hearts++;
+          _saveHearts();
+        });
+      }
+    });
+  }
+
+  Future<void> _loadHearts() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _hearts = prefs.getInt('hearts') ?? 5;
+    });
+  }
+
   final List<Map<String, dynamic>> _questions = [
     {
     'question': 'What is the term for a function that does not return a value in Dart?',
@@ -996,75 +1004,12 @@ class _Section3State extends State<Section3> {
       'question': 'What is the keyword used to define a function that can be used as a constructor in Dart?',
       'correctAnswer': 'Factory',
     },
-    {
-      'question': 'What is the term for a function that is used to initialize an object in Dart?',
-      'correctAnswer': 'Constructor',
-    },
-    {
-      'question': 'What is the term for a function that is used to perform a specific task in Dart?',
-      'correctAnswer': 'Method',
-    },
-    {
-      'question': 'What is the term for a function that is used to extend the functionality of a class in Dart?',
-      'correctAnswer': 'Extension',
-    },
-    {
-      'question': 'What is the keyword used to define a function that can be used as an event handler in Dart?',
-      'correctAnswer': 'Async',
-    },
-    {
-      'question': 'What is the term for a function that is used to handle asynchronous operations in Dart?',
-      'correctAnswer': 'Future',
-    },
-    {
-      'question': 'What is the term for a function that is used to handle errors in Dart?',
-      'correctAnswer': 'Catch',
-    },
-    {
-      'question': 'What is the term for a function that is used to throw an exception in Dart?',
-      'correctAnswer': 'Throw',
-    },
-    {
-      'question': 'What is the term for a function that is used to rethrow an exception in Dart?',
-      'correctAnswer': 'Rethrow',
-    },
-    {
-      'question': 'What is the term for a function that is used to define a recursive function in Dart?',
-      'correctAnswer': 'Recursive',
-    },
-    {
-      'question': 'What is the term for a function that is used to define a higher-order function in Dart?',
-      'correctAnswer': 'Higher',
-    },
-    {
-      'question': 'What is the term for a function that is used to define a pure function in Dart?',
-      'correctAnswer': 'Pure',
-    },
-    {
-      'question': 'What is the term for a function that is used to define a closure in Dart?',
-      'correctAnswer': 'Closure',
-    },
-    {
-      'question': 'What is the term for a function that is used to define a generator in Dart?',
-      'correctAnswer': 'Generator',
-    },
-    {
-      'question': 'What is the term for a function that is used to define an iterator in Dart?',
-      'correctAnswer': 'Iterator',
-    },
-    {
-      'question': 'What is the term for a function that is used to define a stream in Dart?',
-      'correctAnswer': 'Stream',
-    },
-    {
-      'question': 'What is the term for a function that is used to define a future in Dart?',
-      'correctAnswer': 'Future',
-    },
-    {
-      'question': 'What is the term for a function that is used to define a async/await in Dart?',
-      'correctAnswer': 'Await',
-    },
   ];
+  @override
+  void dispose() {
+    _heartTimer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1094,6 +1039,7 @@ class _Section3State extends State<Section3> {
                         children: [
                           Expanded(
                             child: TextField(
+                              controller: _answerController,
                               decoration: const InputDecoration(
                                 labelText: 'answer',
                                 hintText: 'Enter answer',
@@ -1125,7 +1071,7 @@ class _Section3State extends State<Section3> {
                                 });
                               } else {
                                 setState(() {
-                                  _answerResult = 'Incorrect. The correct answer is ${_questions[_currentQuestion]['correctAnswer']}.';
+                                  _answerResult = 'Incorrect. The correct answer';
                                   _hearts = _hearts - 1;
                                 });
                                 _saveHearts();
@@ -1186,6 +1132,33 @@ class _Section4State extends State<Section4> {
   String _answerResult = '';
   int _hearts = 5;
   bool _allAnswersCorrect = false;
+  final _answerController = TextEditingController();
+  Timer? _heartTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadHearts();
+    _startHeartTimer();
+  }
+
+  void _startHeartTimer() {
+    _heartTimer = Timer.periodic(const Duration(minutes: 30), (timer) {
+      if (_hearts < 5) {
+        setState(() {
+          _hearts++;
+          _saveHearts();
+        });
+      }
+    });
+  }
+
+  Future<void> _loadHearts() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _hearts = prefs.getInt('hearts') ?? 5;
+    });
+  }
   final List<Map<String, dynamic>> _questions = [
     {
       'question': 'What is the concept of creating objects that contain data and functions that operate on that data?',
@@ -1215,79 +1188,12 @@ class _Section4State extends State<Section4> {
       'question': 'What is the concept of bundling data and methods that operate on that data?',
       'correctAnswer': 'Encapsulation',
     },
-    {
-      'question': 'What is the ability of an object to respond to a message?',
-      'correctAnswer': 'Responsiveness',
-    },
-    {
-      'question': 'What is the concept of creating a new class that is a modified version of an existing class?',
-      'correctAnswer': 'Subclassing',
-    },
-    {
-      'question': 'What is the relationship between two classes where one class is a generalization of the other?',
-      'correctAnswer': 'Generalization',
-    },
-    {
-      'question': 'What is the concept of hiding internal implementation details?',
-      'correctAnswer': 'Encapsulation',
-    },
-    {
-      'question': 'What is the ability of an object to be treated as an instance of its superclass?',
-      'correctAnswer': 'Polymorphism',
-    },
-    {
-      'question': 'What is the concept of creating a new object from an existing object?',
-      'correctAnswer': 'Cloning',
-    },
-    {
-      'question': 'What is the relationship between two classes where one class is dependent on the other?',
-      'correctAnswer': 'Dependency',
-    },
-    {
-      'question': 'What is the concept of creating a class that cannot be instantiated?',
-      'correctAnswer': 'Abstract',
-    },
-    {
-      'question': 'What is the ability of an object to be used in a variety of situations?',
-      'correctAnswer': 'Flexibility',
-    },
-    {
-      'question': 'What is the concept of creating a class that is a combination of two or more classes?',
-      'correctAnswer': 'Multiple',
-    },
-    {
-      'question': 'What is the relationship between two classes where one class is a part of the other?',
-      'correctAnswer': 'Composition',
-    },
-    {
-      'question': 'What is the concept of creating a class that is a variation of an existing class?',
-      'correctAnswer': 'Specialization',
-    },
-    {
-      'question': 'What is the ability of an object to be used in a specific context?',
-      'correctAnswer': 'Contextual',
-    },
-    {
-      'question': 'What is the concept of creating a class that is a blueprint for other classes?',
-      'correctAnswer': 'Template',
-    },
-    {
-      'question': 'What is the relationship between two classes where one class is a container for the other?',
-      'correctAnswer': 'Aggregation',
-    },
-    {
-      'question': 'What is the concept of creating a class that is a simplified version of an existing class?',
-      'correctAnswer': 'Simplification',
-    },
-    {
-      'question': 'What is the ability of an object to be used in a variety of contexts?',
-      'correctAnswer': 'Versatility',
-    },
-    {
-      'question': 'What is the concept of creating a class that is a combination of two or more interfaces?',
-      'correctAnswer': 'Hybrid',
-    },
   ];
+  @override
+  void dispose() {
+    _heartTimer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1317,6 +1223,7 @@ class _Section4State extends State<Section4> {
                         children: [
                           Expanded(
                             child: TextField(
+                              controller: _answerController,
                               decoration: const InputDecoration(
                                 labelText: 'answer',
                                 hintText: 'Enter answer',
@@ -1348,7 +1255,7 @@ class _Section4State extends State<Section4> {
                                 });
                               } else {
                                 setState(() {
-                                  _answerResult = 'Incorrect. The correct answer is ${_questions[_currentQuestion]['correctAnswer']}.';
+                                  _answerResult = 'Incorrect. The correct answer';
                                   _hearts = _hearts - 1;
                                 });
                                 _saveHearts();
@@ -1409,6 +1316,33 @@ class _Section5State extends State<Section5> {
   String _answerResult = '';
   int _hearts = 5;
   bool _allAnswersCorrect = false;
+  final _answerController = TextEditingController();
+  Timer? _heartTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadHearts();
+    _startHeartTimer();
+  }
+
+  void _startHeartTimer() {
+    _heartTimer = Timer.periodic(const Duration(minutes: 30), (timer) {
+      if (_hearts < 5) {
+        setState(() {
+          _hearts++;
+          _saveHearts();
+        });
+      }
+    });
+  }
+
+  Future<void> _loadHearts() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _hearts = prefs.getInt('hearts') ?? 5;
+    });
+  }
   final List<Map<String, dynamic>> _questions = [
     {
       'question': 'What is a collection of objects that can be of any data type?',
@@ -1437,84 +1371,13 @@ class _Section5State extends State<Section5> {
     {
       'question': 'What is the process of removing an element from a list?',
       'correctAnswer': 'Remove',
-    },
-    {
-      'question': 'What is the process of accessing an element in a list?',
-      'correctAnswer': 'Index',
-    },
-    {
-      'question': 'What is a list that is stored in contiguous memory locations?',
-      'correctAnswer': 'Array',
-    },
-    {
-      'question': 'What is a list that is implemented as a linked list?',
-      'correctAnswer': 'LinkedList',
-    },
-    {
-      'question': 'What is a collection of objects that are sorted in a specific order?',
-      'correctAnswer': 'SortedSet',
-    },
-    {
-      'question': 'What is a collection of objects that are stored in a specific order?',
-      'correctAnswer': 'OrderedSet',
-    },
-    {
-      'question': 'What is the process of combining two lists into one?',
-      'correctAnswer': 'Concat',
-    },
-    {
-      'question': 'What is the process of splitting a list into multiple lists?',
-      'correctAnswer': 'Split',
-    },
-    {
-      'question': 'What is the process of reversing the order of a list?',
-      'correctAnswer': 'Reverse',
-    },
-    {
-      'question': 'What is the process of sorting a list in a specific order?',
-      'correctAnswer': 'Sort',
-    },
-    {
-      'question': 'What is a list that is used to implement a stack?',
-      'correctAnswer': 'ArrayList',
-    },
-    {
-      'question': 'What is a list that is used to implement a queue?',
-      'correctAnswer': 'LinkedList',
-    },
-    {
-      'question': 'What is the process of searching for an element in a list?',
-      'correctAnswer': 'Search',
-    },
-    {
-      'question': 'What is the process of iterating over the elements of a list?',
-      'correctAnswer': 'Iterate',
-    },
-    {
-      'question': 'What is a list that is used to implement a graph?',
-      'correctAnswer': 'AdjacencyList',
-    },
-    {
-      'question': 'What is a list that is used to implement a tree?',
-      'correctAnswer': 'NodeList',
-    },
-    {
-      'question': 'What is the process of converting a list to a string?',
-      'correctAnswer': 'ToString',
-    },
-    {
-      'question': 'What is the process of converting a string to a list?',
-      'correctAnswer': 'Split',
-    },
-    {
-      'question': 'What is a list that is used to implement a heap?',
-      'correctAnswer': 'ArrayList',
-    },
-    {
-      'question': 'What is a list that is used to implement a trie?',
-      'correctAnswer': 'NodeList',
-    },
+    }
   ];
+  @override
+  void dispose() {
+    _heartTimer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1544,6 +1407,7 @@ class _Section5State extends State<Section5> {
                         children: [
                           Expanded(
                             child: TextField(
+                              controller: _answerController,
                               decoration: const InputDecoration(
                                 labelText: 'answer',
                                 hintText: 'Enter answer',
@@ -1575,7 +1439,7 @@ class _Section5State extends State<Section5> {
                                 });
                               } else {
                                 setState(() {
-                                  _answerResult = 'Incorrect. The correct answer is ${_questions[_currentQuestion]['correctAnswer']}.';
+                                  _answerResult = 'Incorrect. The correct answer';
                                   _hearts = _hearts - 1;
                                 });
                                 _saveHearts();
@@ -1637,6 +1501,33 @@ class _Section6State extends State<Section6> {
   String _answerResult = '';
   int _hearts = 5;
   bool _allAnswersCorrect = false;
+  final _answerController = TextEditingController();
+  Timer? _heartTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadHearts();
+    _startHeartTimer();
+  }
+
+  void _startHeartTimer() {
+    _heartTimer = Timer.periodic(const Duration(minutes: 30), (timer) {
+      if (_hearts < 5) {
+        setState(() {
+          _hearts++;
+          _saveHearts();
+        });
+      }
+    });
+  }
+
+  Future<void> _loadHearts() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _hearts = prefs.getInt('hearts') ?? 5;
+    });
+  }
   final List<Map<String, dynamic>> _questions = [
     {
       'question': 'What is an event that occurs during the execution of a program?',
@@ -1666,79 +1557,12 @@ class _Section6State extends State<Section6> {
       'question': 'What is the process of throwing an exception?',
       'correctAnswer': 'Throw',
     },
-    {
-      'question': 'What is a type of error that occurs at compile-time?',
-      'correctAnswer': 'SyntaxError',
-    },
-    {
-      'question': 'What is a type of error that occurs at runtime?',
-      'correctAnswer': 'RuntimeException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a null value is used?',
-      'correctAnswer': 'NullPointerException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when an array index is out of bounds?',
-      'correctAnswer': 'IndexOutOfBoundsException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a class is not found?',
-      'correctAnswer': 'ClassNotFoundException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a method is not found?',
-      'correctAnswer': 'NoSuchMethodException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a file is not found?',
-      'correctAnswer': 'FileNotFoundException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a network connection is lost?',
-      'correctAnswer': 'IOException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a security violation occurs?',
-      'correctAnswer': 'SecurityException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a thread is interrupted?',
-      'correctAnswer': 'InterruptedException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a timeout occurs?',
-      'correctAnswer': 'TimeoutException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a parsing error occurs?',
-      'correctAnswer': 'ParseException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a formatting error occurs?',
-      'correctAnswer': 'FormatException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a database error occurs?',
-      'correctAnswer': 'SQLException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a XML parsing error occurs?',
-      'correctAnswer': 'XMLParseException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a JSON parsing error occurs?',
-      'correctAnswer': 'JSONException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a HTTP error occurs?',
-      'correctAnswer': 'HttpException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a socket error occurs?',
-      'correctAnswer': 'SocketException',
-    },
   ];
+  @override
+  void dispose() {
+    _heartTimer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1768,11 +1592,12 @@ class _Section6State extends State<Section6> {
                         children: [
                           Expanded(
                             child: TextField(
+                              controller: _answerController,
                               decoration: const InputDecoration(
                                 labelText: 'answer',
                                 hintText: 'Enter answer',
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.blue),
+                                  borderSide: BorderSide(color: Color.fromARGB(255, 40, 42, 44)),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.green),
@@ -1799,7 +1624,7 @@ class _Section6State extends State<Section6> {
                                 });
                               } else {
                                 setState(() {
-                                  _answerResult = 'Incorrect. The correct answer is ${_questions[_currentQuestion]['correctAnswer']}.';
+                                  _answerResult = 'Incorrect. The correct answer';
                                   _hearts = _hearts - 1;
                                 });
                                 _saveHearts();
@@ -1861,6 +1686,33 @@ class _Section7State extends State<Section7> {
   String _answerResult = '';
   int _hearts = 5;
   bool _allAnswersCorrect = false;
+  final _answerController = TextEditingController();
+  Timer? _heartTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadHearts();
+    _startHeartTimer();
+  }
+
+  void _startHeartTimer() {
+    _heartTimer = Timer.periodic(const Duration(minutes: 30), (timer) {
+      if (_hearts < 5) {
+        setState(() {
+          _hearts++;
+          _saveHearts();
+        });
+      }
+    });
+  }
+
+  Future<void> _loadHearts() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _hearts = prefs.getInt('hearts') ?? 5;
+    });
+  }
   final List<Map<String, dynamic>> _questions = [
     {
       'question': 'What is an event that occurs during the execution of a program?',
@@ -1890,79 +1742,12 @@ class _Section7State extends State<Section7> {
       'question': 'What is the process of throwing an exception?',
       'correctAnswer': 'Throw',
     },
-    {
-      'question': 'What is a type of error that occurs at compile-time?',
-      'correctAnswer': 'SyntaxError',
-    },
-    {
-      'question': 'What is a type of error that occurs at runtime?',
-      'correctAnswer': 'RuntimeException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a null value is used?',
-      'correctAnswer': 'NullPointerException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when an array index is out of bounds?',
-      'correctAnswer': 'IndexOutOfBoundsException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a class is not found?',
-      'correctAnswer': 'ClassNotFoundException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a method is not found?',
-      'correctAnswer': 'NoSuchMethodException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a file is not found?',
-      'correctAnswer': 'FileNotFoundException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a network connection is lost?',
-      'correctAnswer': 'IOException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a security violation occurs?',
-      'correctAnswer': 'SecurityException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a thread is interrupted?',
-      'correctAnswer': 'InterruptedException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a timeout occurs?',
-      'correctAnswer': 'TimeoutException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a parsing error occurs?',
-      'correctAnswer': 'ParseException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a formatting error occurs?',
-      'correctAnswer': 'FormatException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a database error occurs?',
-      'correctAnswer': 'SQLException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a XML parsing error occurs?',
-      'correctAnswer': 'XMLParseException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a JSON parsing error occurs?',
-      'correctAnswer': 'JSONException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a HTTP error occurs?',
-      'correctAnswer': 'HttpException',
-    },
-    {
-      'question': 'What is a type of exception that is thrown when a socket error occurs?',
-      'correctAnswer': 'SocketException',
-    },
   ];
+  @override
+  void dispose() {
+    _heartTimer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1992,6 +1777,7 @@ class _Section7State extends State<Section7> {
                         children: [
                           Expanded(
                             child: TextField(
+                              controller: _answerController,
                               decoration: const InputDecoration(
                                 labelText: 'answer',
                                 hintText: 'Enter answer',
@@ -2023,7 +1809,7 @@ class _Section7State extends State<Section7> {
                                 });
                               } else {
                                 setState(() {
-                                  _answerResult = 'Incorrect. The correct answer is ${_questions[_currentQuestion]['correctAnswer']}.';
+                                  _answerResult = 'Incorrect. The correct answer';
                                   _hearts = _hearts - 1;
                                 });
                                 _saveHearts();
